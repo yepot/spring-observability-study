@@ -1,8 +1,13 @@
 global:
   scrape_interval: 5s
+  evaluation_interval: 5s
 
 scrape_configs:
-  - job_name: 'springboot'
+  - job_name: 'app'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['springboot:8080']
+      - targets: ['app:8080']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
