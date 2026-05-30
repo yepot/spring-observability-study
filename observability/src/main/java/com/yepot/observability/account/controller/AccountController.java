@@ -1,6 +1,8 @@
 package com.yepot.observability.account.controller;
 
+import com.yepot.observability.account.dto.request.AmountRequest;
 import com.yepot.observability.account.dto.response.AccountResponse;
+import com.yepot.observability.account.dto.response.AccountTransactionResponse;
 import com.yepot.observability.account.service.AccountService;
 import com.yepot.observability.account.dto.request.CreateAccountRequest;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,5 +28,21 @@ public class AccountController {
     @GetMapping("/accounts/{accountId}")
     public AccountResponse getAccount(@PathVariable Long accountId) {
         return accountService.getAccount(accountId);
+    }
+
+    @PostMapping("/accounts/{accountId}/deposit")
+    public AccountTransactionResponse deposit(
+        @PathVariable Long accountId,
+        @RequestBody AmountRequest request
+    ) {
+        return accountService.deposit(accountId, request);
+    }
+
+    @PostMapping("/accounts/{accountId}/withdraw")
+    public AccountTransactionResponse withdraw(
+        @PathVariable Long accountId,
+        @RequestBody AmountRequest request
+    ) {
+        return accountService.withdraw(accountId, request);
     }
 }

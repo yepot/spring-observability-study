@@ -65,6 +65,14 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
+    public void deposit(long amount) {
+        this.balance += amount;
+    }
+
+    public void withdraw(long amount) {
+        this.balance -= amount;
+    }
+
     private String createPendingAccountNumber() {
         return "PENDING-" + UUID.randomUUID();
     }

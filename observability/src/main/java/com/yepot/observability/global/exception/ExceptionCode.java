@@ -8,6 +8,16 @@ public enum ExceptionCode {
     USER_NAME_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "사용자 이름은 필수입니다."),
     INITIAL_BALANCE_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "초기 잔액은 필수입니다."),
     INITIAL_BALANCE_NEGATIVE(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "초기 잔액은 0원 이상이어야 합니다."),
+    DEPOSIT_AMOUNT_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "입금 금액은 필수입니다."),
+    DEPOSIT_AMOUNT_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "입금 금액은 0원보다 커야 합니다."),
+    WITHDRAW_AMOUNT_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "출금 금액은 필수입니다."),
+    WITHDRAW_AMOUNT_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "출금 금액은 0원보다 커야 합니다."),
+    INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "잔액이 부족합니다."),
+    FROM_ACCOUNT_ID_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "출금 계좌 ID는 필수입니다."),
+    TO_ACCOUNT_ID_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "입금 계좌 ID는 필수입니다."),
+    TRANSFER_AMOUNT_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "이체 금액은 필수입니다."),
+    TRANSFER_AMOUNT_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "이체 금액은 0원보다 커야 합니다."),
+    TRANSFER_INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "출금 계좌의 잔액이 부족합니다."),
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.NOT_FOUND, "존재하지 않는 계좌입니다.");
 
     private final HttpStatus httpStatus;
