@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "account_transactions")
@@ -34,6 +35,9 @@ public class AccountTransaction {
     @Column(nullable = false)
     private TransactionStatus status;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
     protected AccountTransaction() {
     }
 
@@ -43,6 +47,7 @@ public class AccountTransaction {
         this.balance = balance;
         this.transactionType = transactionType;
         this.status = TransactionStatus.SUCCESS;
+        this.createdAt = LocalDateTime.now().withNano(0);
     }
 
     public Long getTransactionId() {
@@ -67,5 +72,9 @@ public class AccountTransaction {
 
     public TransactionStatus getStatus() {
         return status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

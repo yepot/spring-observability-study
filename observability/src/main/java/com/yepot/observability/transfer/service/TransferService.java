@@ -1,7 +1,10 @@
 package com.yepot.observability.transfer.service;
 
 import com.yepot.observability.account.domain.Account;
+import com.yepot.observability.account.domain.AccountTransaction;
+import com.yepot.observability.account.domain.TransactionType;
 import com.yepot.observability.account.repository.AccountRepository;
+import com.yepot.observability.account.repository.AccountTransactionRepository;
 import com.yepot.observability.global.exception.ApiException;
 import com.yepot.observability.global.exception.ExceptionCode;
 import com.yepot.observability.transfer.domain.TransferTransaction;
@@ -15,13 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class TransferService {
 
     private final AccountRepository accountRepository;
+    private final AccountTransactionRepository accountTransactionRepository;
     private final TransferTransactionRepository transferTransactionRepository;
 
     public TransferService(
         AccountRepository accountRepository,
+        AccountTransactionRepository accountTransactionRepository,
         TransferTransactionRepository transferTransactionRepository
     ) {
         this.accountRepository = accountRepository;
+        this.accountTransactionRepository = accountTransactionRepository;
         this.transferTransactionRepository = transferTransactionRepository;
     }
 
@@ -40,6 +46,13 @@ public class TransferService {
 
         fromAccount.withdraw(request.amount());
         toAccount.deposit(request.amount());
+
+        accountTransactionRepository.save(
+            new AccountTransaction(fromAccount.getAccountId(), request.amount(), fromAccount.getBalance(), TransactionType.TRANSFER)
+        );
+        accountTransactionRepository.save(
+            new AccountTransaction(toAccount.getAccountId(), request.amount(), toAccount.getBalance(), TransactionType.TRANSFER)
+        );
 
         TransferTransaction transferTransaction = transferTransactionRepository.save(
             new TransferTransaction(fromAccount.getAccountId(), toAccount.getAccountId(), request.amount())

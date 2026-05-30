@@ -7,6 +7,9 @@ import com.yepot.observability.account.dto.request.AmountRequest;
 import com.yepot.observability.account.dto.request.CreateAccountRequest;
 import com.yepot.observability.account.dto.response.AccountResponse;
 import com.yepot.observability.account.dto.response.AccountTransactionResponse;
+import com.yepot.observability.account.dto.response.TransactionHistoryListResponse;
+import com.yepot.observability.account.dto.response.TransactionHistoryResponse;
+import java.util.List;
 import com.yepot.observability.account.repository.AccountRepository;
 import com.yepot.observability.account.repository.AccountTransactionRepository;
 import com.yepot.observability.global.exception.ApiException;
@@ -44,6 +47,18 @@ public class AccountService {
         Account account = getAccountEntity(accountId);
 
         return AccountResponse.from(account);
+    }
+
+    @Transactional(readOnly = true)
+    public TransactionHistoryListResponse getTransactions(Long accountId) {
+        Account account = getAccountEntity(accountId);
+        List<TransactionHistoryResponse> transactions = accountTransactionRepository
+            .findByAccountIdOrderByTransactionIdAsc(accountId)
+            .stream()
+            .map(TransactionHistoryResponse::from)
+            .toList();
+
+        return new TransactionHistoryListResponse(account.getAccountId(), transactions);
     }
 
     @Transactional

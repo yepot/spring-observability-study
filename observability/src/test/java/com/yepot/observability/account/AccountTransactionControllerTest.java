@@ -144,6 +144,50 @@ class AccountTransactionControllerTest {
             .andExpect(jsonPath("$.path").value("/transfers"));
     }
 
+    @Test
+    void getTransactionsReturnsAccountTransactionHistory() throws Exception {
+        Account fromAccount = saveAccount("양은서", 100000L, "100-0000-0001");
+        Account toAccount = saveAccount("김예봄", 50000L, "100-0000-0002");
+
+        mockMvc.perform(post("/accounts/{accountId}/deposit", fromAccount.getAccountId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new AmountRequest(50000L))))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(post("/transfers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                    new TransferRequest(fromAccount.getAccountId(), toAccount.getAccountId(), 10000L)
+                )))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(
+                "/accounts/{accountId}/transactions", fromAccount.getAccountId()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.accountId").value(fromAccount.getAccountId()))
+            .andExpect(jsonPath("$.transactions[0].transactionId").isNumber())
+            .andExpect(jsonPath("$.transactions[0].type").value("DEPOSIT"))
+            .andExpect(jsonPath("$.transactions[0].amount").value(50000))
+            .andExpect(jsonPath("$.transactions[0].status").value("SUCCESS"))
+            .andExpect(jsonPath("$.transactions[0].createdAt").exists())
+            .andExpect(jsonPath("$.transactions[1].transactionId").isNumber())
+            .andExpect(jsonPath("$.transactions[1].type").value("TRANSFER"))
+            .andExpect(jsonPath("$.transactions[1].amount").value(10000))
+            .andExpect(jsonPath("$.transactions[1].status").value("SUCCESS"))
+            .andExpect(jsonPath("$.transactions[1].createdAt").exists());
+    }
+
+    @Test
+    void getTransactionsWithUnknownAccountReturnsNotFound() throws Exception {
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(
+                "/accounts/{accountId}/transactions", 99999L))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.error").value("Not Found"))
+            .andExpect(jsonPath("$.message").value("존재하지 않는 계좌입니다."))
+            .andExpect(jsonPath("$.path").value("/accounts/99999/transactions"));
+    }
+
     private Account saveAccount(String userName, Long balance, String accountNumber) {
         Account account = accountRepository.save(new Account(userName, balance));
         account.updateAccountNumber(accountNumber);
