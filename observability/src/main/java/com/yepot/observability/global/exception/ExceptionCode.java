@@ -18,6 +18,10 @@ public enum ExceptionCode {
     TRANSFER_AMOUNT_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "이체 금액은 필수입니다."),
     TRANSFER_AMOUNT_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "이체 금액은 0원보다 커야 합니다."),
     TRANSFER_INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "출금 계좌의 잔액이 부족합니다."),
+    MASS_TRANSFER_COUNT_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "반복 횟수는 필수입니다."),
+    MASS_TRANSFER_COUNT_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.ILLEGAL_ARGUMENT, "반복 횟수는 1 이상이어야 합니다."),
+    SLOW_TRANSFER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, ClientExceptionCode.INTERNAL_SERVER_ERROR, "느린 API 처리 중 오류가 발생했습니다."),
+    ERROR_TRANSFER_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, ClientExceptionCode.INTERNAL_SERVER_ERROR, "의도적으로 발생시킨 에러입니다."),
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.NOT_FOUND, "존재하지 않는 계좌입니다.");
 
     private final HttpStatus httpStatus;

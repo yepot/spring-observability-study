@@ -16,31 +16,31 @@ public final class ExceptionResponseFactory {
 
     public static ExceptionResponse from(ExceptionCode exceptionCode, String path) {
         return new ExceptionResponse(
+                OffsetDateTime.now(ZoneOffset.UTC).format(TIMESTAMP_FORMATTER),
                 exceptionCode.getHttpStatus().value(),
                 exceptionCode.getClientExceptionCode().getError(),
                 exceptionCode.getMessage(),
-                path,
-                OffsetDateTime.now(ZoneOffset.UTC).format(TIMESTAMP_FORMATTER)
+                path
         );
     }
 
     public static ExceptionResponse from(ApiException exception, String path) {
         return new ExceptionResponse(
+                OffsetDateTime.now(ZoneOffset.UTC).format(TIMESTAMP_FORMATTER),
                 exception.getHttpStatusCode().value(),
                 exception.getExceptionCodeName(),
                 exception.getMessage(),
-                path,
-                OffsetDateTime.now(ZoneOffset.UTC).format(TIMESTAMP_FORMATTER)
+                path
         );
     }
 
     public static ExceptionResponse badRequest(String message, String path) {
         return new ExceptionResponse(
+                OffsetDateTime.now(ZoneOffset.UTC).format(TIMESTAMP_FORMATTER),
                 HttpStatus.BAD_REQUEST.value(),
                 ClientExceptionCode.ILLEGAL_ARGUMENT.getError(),
                 message,
-                path,
-                OffsetDateTime.now(ZoneOffset.UTC).format(TIMESTAMP_FORMATTER)
+                path
         );
     }
 
