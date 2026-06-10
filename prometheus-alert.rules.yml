@@ -1,0 +1,29 @@
+groups:
+  - name: observability-study
+    rules:
+      - alert: AppDown
+        expr: max(up{job="app"}) == 0
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: Application target is down
+          description: Prometheus has not been able to scrape any Spring app target for at least 15 seconds.
+
+      - alert: ErrorTransferFailures
+        expr: sum(rate(observability_test_scenario_requests_total{scenario="error-transfer",result="failure"}[1m])) > 0
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: Error transfer scenario is failing
+          description: The test endpoint /test/error-transfer is producing failures during the last minute.
+
+      - alert: SlowTransferLatencyHigh
+        expr: histogram_quantile(0.95, sum by (le) (rate(observability_test_scenario_duration_seconds_bucket{scenario="slow-transfer",result="success"}[1m]))) > 2
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: Slow transfer latency is above threshold
+          description: The p95 latency for /test/slow-transfer has stayed above 2 seconds for at least 15 seconds.
